@@ -1,0 +1,28 @@
+# Entorno virtual
+venv/
+
+# Archivos de entorno
+.env
+
+# Archivos generados por Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de logs
+*.log
+
+# Archivos de compilación y distribución
+build/
+dist/
+*.egg-info/
+
+# Docker
+docker-compose.override.yml
+*.dockerignore
+
+# Configuración de editor/IDE
+.vscode/
+.idea/
+*.swp
+*~
