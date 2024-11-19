@@ -1,9 +1,12 @@
 import os
+from environs import Env
 from fastapi import FastAPI
 from app.routers import process_image
 import firebase_admin
 from firebase_admin import credentials
 
+env = Env()
+env.read_env()
 
 service_account_info = {
     "type": "service_account",
