@@ -29,8 +29,8 @@ Ejecute los siguientes comandos para ejecutar la aplicacion
 
 ```shell
 Python3 -m venv venv
-source ./env/bin/activate
-python -m pip install -r requirements.txt
+source ./venv/bin/activate
+pip install -r requirements.txt
 uvicorn app.main:app
 ```
 Nota: No se usa ```fastapi run env``` para ejecutar con las mismas condiciones del docker
