@@ -1,6 +1,5 @@
 # Stage 1: Build Dependencies
-#FROM marketplace.gcr.io/google/ubuntu2404:latest AS build
-FROM python:3.12-slim AS build
+FROM marketplace.gcr.io/google/ubuntu2404:latest AS build
 
 # Avoid interactive frontend
 ARG DEBIAN_FRONTEND=noninteractive
@@ -14,8 +13,8 @@ RUN apt-get update \
     && apt-get autoclean
 
 # Install python
-#RUN apt-get install -y python3.12 \
-#    && apt-get install -y python3.12-venv
+RUN apt-get install -y python3.12 \
+    && apt-get install -y python3.12-venv
 
 ARG APP_HOME=/home/app
 
@@ -34,8 +33,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
 
 # Build final image
-#FROM marketplace.gcr.io/google/ubuntu2404:latest AS final
-FROM python:3.12-slim AS final
+FROM marketplace.gcr.io/google/ubuntu2404:latest AS final
 
 ENV PIP_DEFAULT_TIMEOUT=100 \
     # Allow statements and log messages to immediately appear

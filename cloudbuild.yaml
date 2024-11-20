@@ -1,0 +1,83 @@
+steps:
+  - id: "Build image"
+    name: "docker"
+    args:
+      [
+        "build",
+        "--no-cache",
+        "-t",
+        "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:latest",
+        ".",
+      ]
+
+  - id: "Tag image"
+    name: "docker"
+    args:
+      [
+        "tag",
+        "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:latest",
+        "image-app:latest",
+      ]
+
+  - id: "Tag image ${REVISION_ID}"
+    name: "docker"
+    args:
+      [
+        "tag",
+        "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:latest",
+        "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:${REVISION_ID}",
+      ]
+
+  - id: "Docker push to Google Artifact Registry"
+    name: "docker"
+    args:
+      [
+        "push",
+        "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:latest",
+      ]
+
+  - id: "Docker push to Google Artifact Registry ${REVISION_ID}"
+    name: "docker"
+    args:
+      [
+        "push",
+        "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:${REVISION_ID}",
+      ]
+  - id: "Deploy to Cloud Run"
+    name: google/cloud-sdk
+    args:
+      [
+        "gcloud",
+        "run",
+        "deploy",
+        "image-app-endpoint-us-east1",
+        "--platform=managed",
+        "--network=augusta-edge-dev-vpc",
+        "--subnet=augusta-edge-dev-us-east1",
+        "--ingress=all",
+        "--vpc-egress=all-traffic",
+        "--service-account=sa-test-sftp-responsys@augusta-edge-project.iam.gserviceaccount.com",
+        "--image=us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:latest",
+        "--set-secrets=ASSOCIATED_DATA=augusta-edge-project-idaval-passphrase:latest",
+        "--set-secrets=KEYSET=augusta-edge-project-idaval-private-key-body:latest",
+        "--region=us-east1",
+        "--execution-environment=gen2",
+        "--cpu=1",
+        "--memory=512Mi",
+        "--min-instances=0",
+        "--port=8000",
+        "--session-affinity"
+      ]
+
+images:
+  [
+    "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:latest",
+    "us-docker.pkg.dev/${PROJECT_ID}/docker-artifacts/image-app:${REVISION_ID}",
+  ]
+
+options:
+  logging: GCS_ONLY
+
+logsBucket: "gs://augusta-edge-project_cloudbuild/logs"
+
+serviceAccount: "projects/${PROJECT_ID}/serviceAccounts/cloud-build-artifacts@${PROJECT_ID}.iam.gserviceaccount.com"

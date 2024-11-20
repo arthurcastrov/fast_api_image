@@ -49,6 +49,8 @@ Ejecutar la imagen
 
 docker run --env-file .env -p 8000:8000 fastapi-app
 
+docker run --env-file .env -p 8000:8000 us-docker.pkg.dev/mi-proyecto/docker-artifacts/image-app
+
 docker run -it --entrypoint bash fastapi-app
 ```
 
